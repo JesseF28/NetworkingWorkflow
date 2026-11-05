@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+# Prospect data stays in OneDrive, never in this repo.
+*.csv
+outbox.json
+*.xlsx
+*.pdf
