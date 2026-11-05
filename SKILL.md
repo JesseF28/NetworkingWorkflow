@@ -1,6 +1,6 @@
 ---
 name: networking-workflow
-description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the approved emails for Thursdays at 1 PM Eastern from Jesse's Vanderbilt Outlook with Fagen.pdf attached. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, or when the Tuesday scheduled run fires, even if they don't name the skill.
+description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the approved emails for Thursdays at 1 PM Eastern from Jesse's Vanderbilt Outlook with Fagen.pdf attached, then logs sent mail into the Master Tracker every Sunday. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, to update the tracker from sent mail, log who they emailed or check who's been contacted, or when the Tuesday or Sunday scheduled run fires, even if they don't name the skill.
 ---
 
 # Networking workflow
@@ -11,10 +11,11 @@ Jesse Fagen is a Vanderbilt freshman (math + economics) networking toward PE, VC
 |---|---|---|---|
 | 1. Find people | 20 new qualifying alumni, each with an email address | `references/find-people.md`, `references/sources.md` | Yes |
 | 2. Write emails | Subject and body in Jesse's template | Below, `references/email-template.md` | Yes |
-| 3. Add to master list | Google Doc, local log, tracker sheet, outbox | `references/master-list.md` | Yes |
+| 3. Add to master list | Google Doc, local log, Master Tracker, outbox | `references/master-list.md` | Yes |
 | Approval | Jesse says who gets emailed | Below | **Jesse only** |
 | 4. Schedule send | Outlook schedule send with Fagen.pdf, for Thursday at 1 PM Eastern | `references/schedule-send.md` | **No** |
 | 5. Update master list | Record what was scheduled | `references/master-list.md` | With stage 4 |
+| 6. Sent mail sync | Move emailed people to Contacted, update stages | `references/sent-sync.md` | Yes, after the first catch-up run |
 
 All IDs, paths and rules are in `config.json`. Run scripts from this folder. Read each stage's reference when you reach that stage, not before.
 
@@ -27,6 +28,7 @@ All IDs, paths and rules are in `config.json`. Run scripts from this folder. Rea
 | "Send this week's emails", "schedule them", "send the verified ones" | `outbox.py show`, confirm who, then stages 4–5 |
 | A brief, a document or pasted notes about one person | The one-person path below |
 | "What's queued?", "did those go out?" | `outbox.py show`, plus the Outlook check in stage 4 if they want it confirmed |
+| The Sunday scheduled run, "update the tracker from my sent mail", "who have I contacted?" | Stage 6 |
 
 ## Order: one step after another
 
@@ -41,7 +43,8 @@ A stage is done only when its check passes:
 | 3. Add to master list | `build_doc.py validate` passes, the doc is uploaded and read back, and people are in the log, the outbox and the sheet (or you've said why the sheet wasn't updated) |
 | Approval | Jesse has said who to send, in chat |
 | 4. Schedule send | Every approved email is marked in the outbox, and the final Outlook check is finished |
-| 5. Update master list | Send statuses on the sheet are read back and match the outbox |
+| 5. Update master list | Stage and Target date on the sheet are read back and match the outbox |
+| 6. Sent mail sync | Every planned change is read back from the sheet, and `sent_sync.py done` has run |
 
 If a check fails, fix it before moving on. If it can't be fixed, stop and tell Jesse what's blocking it instead of carrying on with a partial result. The exception is a short list: fewer than 20 strong people is fine, as long as the doc says why.
 
@@ -52,6 +55,7 @@ If a check fails, fix it before moving on. If it can't be fixed, stop and tell J
 | Tuesday 10 a.m. | The scheduled run does stages 1–3 and stops |
 | Tuesday to Thursday morning | Jesse reviews the doc and says who to send, then stages 4–5 run in that chat |
 | Thursday 1 PM Eastern | Outlook sends everything that was scheduled |
+| Sunday 6 p.m. | The scheduled run does stage 6, moving everyone who was emailed to Contacted |
 
 All emails go out in this Thursday slot, including one-person sends, unless Jesse asks for another time. `outbox.py when` gives the exact date. Approval is needed on or before Thursday morning to make that week's slot; after that, emails go the following Thursday.
 

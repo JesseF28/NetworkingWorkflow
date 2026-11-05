@@ -4,10 +4,10 @@ These notes reflect what worked and what failed in real runs. Update them when y
 
 ## PitchBook (best for people + emails)
 
-Jesse has PitchBook through Vanderbilt (account `jesse.r.fagan@vanderbilt.edu`). Use it in Chrome (Claude in Chrome tools: load them in one ToolSearch call; see `anthropic-skills:chrome-browser`).
+Jesse has PitchBook through Vanderbilt (account `jesse.r.fagen@vanderbilt.edu`). Use it in Chrome (Claude in Chrome tools: load them in one ToolSearch call; see `anthropic-skills:chrome-browser`).
 
 - Open `https://my.pitchbook.com/`. If you land on the Morningstar/PitchBook sign-in page, Jesse has said you may start the sign-in (2026-11-05):
-  1. Enter `jesse.r.fagan@vanderbilt.edu` and click Continue.
+  1. Enter `jesse.r.fagen@vanderbilt.edu` and click Continue.
   2. If the flow goes straight to a push prompt (Duo or similar), wait for Jesse to approve it on their phone. Check the page about every 30 seconds for up to 5 minutes. If `PushNotification` is available, send one saying the approval is waiting.
   3. If a password field appears, stop there. Never type a password, even if one is saved or Jesse has approved sign-in in general. Only Jesse enters it.
   4. If the push isn't approved in time, or a password is needed, carry on with public sources and put "PitchBook was signed out" in the run notes and your final reply.
@@ -25,7 +25,7 @@ Jesse has PitchBook through Vanderbilt (account `jesse.r.fagan@vanderbilt.edu`).
 - **Single lookups**: the "Search PitchBook…" box at the top finds a person or firm. The first suggestion opens the profile; an investor profile shows AUM in General Information.
 - PitchBook-listed emails count as `Verified (PitchBook)`, and the person's profile URL (from the name link) is the `profile_source`.
 - **Firm AUM**: the investor profile's AUM field. Label it "PitchBook AUM".
-- **Emails**: person profiles often list a work email. The tracker sheet's "PE HF RE additions" tab shows earlier PitchBook-sourced emails and how they were recorded (profile URL as the source).
+- **Emails**: person profiles often list a work email. The older tracker's "PE HF RE additions" tab shows earlier PitchBook-sourced emails and how they were recorded (profile URL as the source).
 - Read pages with `get_page_text` instead of screenshots where you can. It is faster and cheaper.
 
 ## Finding Vanderbilt alumni without PitchBook

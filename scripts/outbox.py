@@ -46,8 +46,21 @@ MOVES = {
 }
 # Going back to `approved` means sending it again, so say what Outlook showed.
 NOTE_REQUIRED = {("unclear", "approved"), ("scheduled", "approved"), ("failed", "approved")}
-SHEET_COLUMNS = ["Week", "Name", "Title", "Firm", "Strategy", "AUM $M", "Location", "Vanderbilt", "Email",
-                 "Email confidence", "Subject", "Doc link", "Send status"]
+# The Master Tracker's Prospects tab, in order. sent_sync.py stops if these columns move.
+SHEET_COLUMNS = ["Contact", "Firm", "Stage", "Next action", "Email", "Email confidence", "Role / focus",
+                 "Vanderbilt class", "Location", "Last touch", "Target date (source)", "AUM / evidence",
+                 "Notes & history", "Sources"]
+SHEET_STAGE = {"needs_approval": "Draft saved", "approved": "Draft saved", "draft_saved": "Draft saved",
+               "scheduled": "Scheduled — confirm sent", "unclear": "Hold", "failed": "Hold", "skipped": "Hold"}
+NEXT_ACTION = {
+    "needs_approval": "Approve in chat to schedule for Thursday 1 PM Eastern.",
+    "approved": "Waiting to be scheduled in Outlook.",
+    "draft_saved": "Draft saved in Outlook; finish and schedule it.",
+    "scheduled": "Sunday sync confirms it was sent.",
+    "unclear": "Check Outlook: it's unclear whether this was scheduled.",
+    "failed": "Scheduling failed; try again or find another address.",
+    "skipped": "Skipped; don't email unless Jesse asks.",
+}
 
 
 def fail(msg):
@@ -209,19 +222,33 @@ def cmd_mark(a):
     print(f"{i['name']}: {old} -> {a.status}")
 
 
-def send_status(i):
-    label = i["status"].replace("_", " ").capitalize()
-    return f"{label} {i['scheduled_for']}" if i.get("scheduled_for") else label
+def as_text(value):
+    """The apostrophe stops Sheets turning class years and dates into numbers."""
+    return f"'{value}" if value not in (None, "") else ""
+
+
+def target_date(i):
+    if not i.get("scheduled_for"):
+        return ""
+    d = dt.date.fromisoformat(i["scheduled_for"][:10])
+    return as_text(f"{d.strftime('%b')} {d.day}, {d.year}")
+
+
+def sheet_row(i):
+    aum = i.get("aum_musd", "")
+    evidence = "; ".join(x for x in (f"{aum} million" if aum not in ("", None) else "", i.get("aum_source", "")) if x)
+    notes = [f"Weekly list {i['run_date']}", f"Subject: {i['subject']}"]
+    notes += [f"Vanderbilt: {i['vanderbilt']}"] if i.get("vanderbilt") else []
+    notes += [f"Class source: {i['grad_year_source']}"] if i.get("grad_year_source") else []
+    sources = [i.get(k) for k in ("doc_url", "profile_source", "aum_source") if i.get(k)]
+    return [i["name"], i.get("firm", ""), SHEET_STAGE[i["status"]], NEXT_ACTION[i["status"]], i["email"],
+            i.get("email_confidence", ""), " / ".join(x for x in (i.get("title"), i.get("strategy")) if x),
+            as_text(i.get("grad_year")), i.get("location", ""), "", target_date(i), evidence,
+            "\n".join(notes), "\n".join(sources)]
 
 
 def cmd_sheet_rows(a):
-    rows = []
-    for i in selected(load(a.outbox), a):
-        if a.new_only and i.get("on_sheet"):
-            continue
-        rows.append([i["run_date"], i["name"], i.get("title", ""), i.get("firm", ""), i.get("strategy", ""),
-                     i.get("aum_musd", ""), i.get("location", ""), i.get("vanderbilt", ""), i["email"],
-                     i.get("email_confidence", ""), i["subject"], i.get("doc_url") or "", send_status(i)])
+    rows = [sheet_row(i) for i in selected(load(a.outbox), a) if not (a.new_only and i.get("on_sheet"))]
     with open(a.out, "w", encoding="utf-8") as f:
         json.dump({"columns": SHEET_COLUMNS, "rows": rows}, f, indent=1, ensure_ascii=False)
     print(f"{len(rows)} rows -> {a.out}")

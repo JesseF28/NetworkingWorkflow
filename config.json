@@ -1,14 +1,16 @@
 {
-  "tracker_sheet_id": "1s-tHHfYPikG0wOIp69OeNWGCpAuZ4Mp0sa0rWlHadc0",
-  "tracker_sheet_url": "https://docs.google.com/spreadsheets/d/1s-tHHfYPikG0wOIp69OeNWGCpAuZ4Mp0sa0rWlHadc0/edit",
-  "tracker_weekly_tab": "Weekly prospects",
+  "tracker_sheet_id": "1iCIwaolquBJteKIDFYuwpuQfGIgeciniHdpoW5awgmg",
+  "tracker_sheet_url": "https://docs.google.com/spreadsheets/d/1iCIwaolquBJteKIDFYuwpuQfGIgeciniHdpoW5awgmg/edit",
+  "older_tracker_sheet_id": "1s-tHHfYPikG0wOIp69OeNWGCpAuZ4Mp0sa0rWlHadc0",
+  "prospects_tab": "Prospects",
+  "contacted_tab": "Contacted",
   "drive_folder_id": "1BFKA1-BDl_PZOApprMIaJrbJrMViuDbj",
   "drive_folder_url": "https://drive.google.com/drive/folders/1BFKA1-BDl_PZOApprMIaJrbJrMViuDbj",
   "prospect_log_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/prospect-log.csv",
   "firm_aum_cache_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/firm-aum-cache.csv",
   "prospect_pool_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/prospect-pool.csv",
   "outbox_json": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/outbox.json",
-  "outlook_web_url": "https://outlook.cloud.microsoft/mail/sentitems",
+  "outlook_sent_url": "https://outlook.cloud.microsoft/mail/sentitems",
   "outlook_mail_url": "https://outlook.cloud.microsoft/mail/",
   "sender_mailbox": "jesse.r.fagen@vanderbilt.edu",
   "attachment_name": "Fagen.pdf",
@@ -36,5 +38,18 @@
     "school_year": "freshman",
     "major": "mathematics and economics"
   },
-  "availability": "Would you be open to a 15–20 minute call next week? I'm available from 11 AM to 1 PM EST or from 4 PM to 7 PM EST, on Monday and Friday. I'm also available from 4 PM to 7 PM EST on Wednesday and from 5:30 PM to 7:30 PM EST on Tuesday/Thursday. If any of these times work for you, I'd be happy to send you a calendar invite. If these times don't work, I'd be able to work around your schedule."
+  "availability": "Would you be open to a 15–20 minute call next week? I'm available from 11 AM to 1 PM EST or from 4 PM to 7 PM EST, on Monday and Friday. I'm also available from 4 PM to 7 PM EST on Wednesday and from 5:30 PM to 7:30 PM EST on Tuesday/Thursday. If any of these times work for you, I'd be happy to send you a calendar invite. If these times don't work, I'd be able to work around your schedule.",
+  "data_dir": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls",
+  "state_file": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/sent-sync-state.json",
+  "first_sync_since": "2026-09-25",
+  "overlap_days": 3,
+  "follow_up_days": 10,
+  "ignore_addresses": [
+    "randifagen@gmail.com",
+    "brianfagen@gmail.com",
+    "jesseryderfagen@gmail.com"
+  ],
+  "ignore_names": [
+    "randi fagen"
+  ]
 }

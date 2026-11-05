@@ -6,17 +6,17 @@ All IDs and paths are in `config.json` at the skill root. Run scripts from the s
 
 ## 1a. Build the do-not-contact list
 
-1. Download the tracker sheet as .xlsx with Drive `download_file_content` (`fileId` = `tracker_sheet_id`, `exportMimeType` = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`). The result is large and is usually saved to a file; note that path.
-   Older copies of the tracker also exist (Drive search: spreadsheets with `title contains 'networking tracker'` or `title contains 'networking_tracker'`, owner = me). Download each the same way and pass all of them to `--sheet`. Use `download_file_content`, not `read_file_content`: for a Sheet, `read_file_content` returns only a sample.
+1. Download the Master Tracker as .xlsx with Drive `download_file_content` (`fileId` = `tracker_sheet_id`, `exportMimeType` = `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`). The result is large and is usually saved to a file; note that path.
+   Download `older_tracker_sheet_id` the same way, because it holds tabs the Master Tracker doesn't. More old copies also exist (Drive search: spreadsheets with `title contains 'networking tracker'` or `title contains 'networking_tracker'`, owner = me). Download each the same way and pass all of them to `--sheet`. Use `download_file_content`, not `read_file_content`: for a Sheet, `read_file_content` returns only a sample.
 2. List the files in the Drive folder (`search_files` with `parentId = '<drive_folder_id>'`; an empty result `{}` just means no past docs yet) and read each past weekly doc with `read_file_content`. Save their text to one file in a scratch directory. Past lists count as contacted even if Jesse never logged them.
 3. Run:
    ```
    python -I scripts/dnc.py build --sheet <saved xlsx or tool-result json> [more sheets...] --log <prospect_log_csv> --docs <past-docs.txt> --out <scratch>/dnc.json
    ```
    It pulls every name and email from every tab of the sheet, the local log, and past docs. It prints how many it found; the sheet alone has ~60 people, so a much smaller number means the download went wrong.
-4. Optional but useful: if Outlook web (`outlook_web_url`) is signed in, look at Sent Items for the last ~30 days and add any finance-looking recipients not already on the list (put them in a text file and pass it with `--extra`). The list is virtualized; see `references/sources.md` for a fast way to read it. If Outlook shows a sign-in page, skip this step, since the sheet is the primary record.
+4. Optional but useful: if Outlook web (`outlook_sent_url`) is signed in, look at Sent Items for the last ~30 days and add any finance-looking recipients not already on the list (put them in a text file and pass it with `--extra`). The list is virtualized; see `references/sources.md` for a fast way to read it. If Outlook shows a sign-in page, skip this step, since the sheet is the primary record.
 
-Also reuse the sheet's research: the "New PE VC prospects", "AUM13F verified alumni" and "PE HF RE additions" tabs list people Jesse *screened but may not have emailed*. They are on the do-not-contact list (Jesse has seen them already); don't resurface them.
+Also reuse the older tracker's research: the "New PE VC prospects", "AUM13F verified alumni" and "PE HF RE additions" tabs list people Jesse *screened but may not have emailed*. They are on the do-not-contact list (Jesse has seen them already); don't resurface them.
 
 ## 1b. Find candidates
 

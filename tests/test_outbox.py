@@ -111,11 +111,36 @@ class OutboxTest(unittest.TestCase):
             data = json.load(f)
         self.assertEqual(len(data["rows"]), 3)
         self.assertEqual(len(data["rows"][0]), len(data["columns"]))
-        self.assertEqual(data["rows"][0][-1], "Needs approval")
+        self.assertEqual(data["rows"][0][2], "Draft saved")
         self.run_ok("mark-sheet")
         self.run_ok("sheet-rows", "--new-only", "--out", rows_path)
         with open(rows_path, encoding="utf-8") as f:
             self.assertEqual(json.load(f)["rows"], [])
+
+
+    def test_sheet_columns_match_what_the_sunday_sync_requires(self):
+        sys.path.insert(0, os.path.join(ROOT, "scripts"))
+        import outbox
+        import sent_sync
+        self.assertEqual(outbox.SHEET_COLUMNS, sent_sync.COLUMNS)
+
+    def test_every_sheet_stage_is_one_the_sunday_sync_knows(self):
+        sys.path.insert(0, os.path.join(ROOT, "scripts"))
+        import outbox
+        import sent_sync
+        self.assertLessEqual(set(outbox.SHEET_STAGE.values()), set(sent_sync.RANK))
+        self.assertEqual(set(outbox.SHEET_STAGE), set(outbox.MOVES))
+
+    def test_scheduled_row_shows_stage_and_target_date_as_text(self):
+        self.run_ok("approve", "--verified")
+        self.run_ok("mark", "--email", "ana@example.com", "--status", "scheduled",
+                    "--scheduled-for", "2026-11-12 13:00 ET")
+        rows_path = os.path.join(self.dir.name, "rows.json")
+        self.run_ok("sheet-rows", "--out", rows_path)
+        with open(rows_path, encoding="utf-8") as f:
+            row = json.load(f)["rows"][0]
+        self.assertEqual(row[2], "Scheduled — confirm sent")
+        self.assertEqual(row[10], "'Nov 12, 2026")
 
 
 if __name__ == "__main__":

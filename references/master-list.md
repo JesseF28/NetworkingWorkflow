@@ -1,15 +1,23 @@
 # Stages 3 and 5: Add to the master list
 
-The master list is the Google Sheet **Vanderbilt networking tracker** (`tracker_sheet_id` in config). Four records work together:
+The master list is the Google Sheet **Vanderbilt Networking — Master Tracker** (`tracker_sheet_id` in config). Its **Prospects** tab holds people who haven't been emailed, and **Contacted** holds people who have. Each person moves through it like this:
+
+| When | Where they are | Stage |
+|---|---|---|
+| Stage 3, listed | Prospects | `Draft saved` |
+| Stage 5, scheduled | Prospects | `Scheduled — confirm sent` |
+| Stage 6, seen in Sent Items | Contacted | `Initial email sent`, then later stages |
+
+Only stage 6 moves people to Contacted, because only Sent Items proves an email went out. Don't add anyone to Contacted here.
+
+Four records work together:
 
 | Record | Holds | Written |
 |---|---|---|
 | Weekly Google Doc | The list, for Jesse to read | Stage 3 |
 | `prospect_log_csv` | Everyone ever listed, so repeats get blocked | Stage 3 |
 | `outbox_json` | Every email and its send status, between sessions | Stages 3 and 4 |
-| Tracker sheet, "Weekly prospects" tab | Each week's people and send status | Stages 3 and 5 |
-
-The sheet's main **Tracker** and **Activity** tabs are for real correspondence (sent, replied, call booked), so don't write listed-but-unsent people there.
+| Master Tracker | Where every person stands | Stages 3, 5 and 6 |
 
 ## Stage 3a: Validate
 
@@ -39,23 +47,26 @@ Always log through the script. It labels the week, and if Excel has the log open
 
 The outbox matters as much as the log: scratch folders disappear when a session ends, and the outbox is how a later chat gets the emails without rewriting them.
 
-## Stage 3d: Add to the sheet
+## Stage 3d: Add to the Master Tracker
 
-This needs the **Google Sheets connector**, connected 2026-11-05 (load `get_spreadsheet`, `get_values`, `append_values`, `update_values` and `update_spreadsheet` with ToolSearch). Read `anthropic-skills:google-workspace` and its `references/sheets.md` first, because Sheets parses input like the UI does and can turn text into dates or numbers.
+This needs the **Google Sheets connector** (load `get_spreadsheet`, `get_values`, `append_values` and `update_values` with ToolSearch). Read `anthropic-skills:google-workspace` and its `references/sheets.md` first, because Sheets parses input like the UI does and can turn text into dates or numbers.
 
 ```
 python -I scripts/outbox.py sheet-rows --new-only --out <scratch>/rows.json
 ```
-1. Read the sheet's tabs. If "Weekly prospects" doesn't exist, add it with `columns` from `rows.json` as the header in row 1. Keep the header `Name` exactly: `dnc.py` finds people through it, so this tab also feeds the do-not-contact list.
-2. Read the Email column, drop any row whose address is already there, and append the rest.
-3. Read the tab again and check the rows landed, then run `python -I scripts/outbox.py mark-sheet`.
+The rows already match the tab's 14 columns, and class years and dates carry the apostrophe that keeps them as text. Don't change the columns: stage 6 stops if they move.
+
+1. Read the Email column (E) of both `Prospects` and `Contacted`, and drop any row whose address is already on either tab.
+2. Append the rest to `Prospects`.
+3. Read the tab back and check the rows landed, then run `python -I scripts/outbox.py mark-sheet`.
 
 **If the connector isn't available**, don't edit the sheet through Chrome. The rows stay unmarked in the outbox, so nothing is lost and the next run with the connector adds them all through `--new-only`. The log and weekly docs still prevent repeats. Say in your final message that the sheet wasn't updated.
 
 ## Stage 5: After scheduling
 
-1. Run `python -I scripts/outbox.py sheet-rows --out <scratch>/rows.json`, which has every person's current send status.
-2. On "Weekly prospects", find each person's row by email and update the Send status cell, for example `Scheduled 2026-11-12 13:00 ET`. Add a row for anyone missing, such as a one-person send.
-3. Read the cells back to check them, then run `mark-sheet`.
+1. Run `python -I scripts/outbox.py sheet-rows --out <scratch>/rows.json`, which has every person's current Stage, Next action and Target date.
+2. On `Prospects`, find each person's row by email and update columns C (Stage), D (Next action) and K (Target date) from their row in `rows.json`. If someone isn't there, such as a one-person send, append their whole row.
+3. If a person is already on `Contacted`, leave that row alone. It's further along.
+4. Read the cells back to check them, then run `mark-sheet`.
 
 Without the connector, skip this and say so. The outbox keeps the status, so it can be caught up later.
