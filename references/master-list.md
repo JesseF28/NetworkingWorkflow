@@ -41,7 +41,7 @@ The outbox matters as much as the log: scratch folders disappear when a session 
 
 ## Stage 3d: Add to the sheet
 
-This needs the **Google Sheets connector** (search for tools with "google sheets update"). Read `anthropic-skills:google-workspace` and its `references/sheets.md` first, because Sheets parses input like the UI does and can turn text into dates or numbers.
+This needs the **Google Sheets connector**, connected 2026-11-05 (load `get_spreadsheet`, `get_values`, `append_values`, `update_values` and `update_spreadsheet` with ToolSearch). Read `anthropic-skills:google-workspace` and its `references/sheets.md` first, because Sheets parses input like the UI does and can turn text into dates or numbers.
 
 ```
 python -I scripts/outbox.py sheet-rows --new-only --out <scratch>/rows.json
@@ -55,7 +55,7 @@ python -I scripts/outbox.py sheet-rows --new-only --out <scratch>/rows.json
 ## Stage 5: After scheduling
 
 1. Run `python -I scripts/outbox.py sheet-rows --out <scratch>/rows.json`, which has every person's current send status.
-2. On "Weekly prospects", find each person's row by email and update the Send status cell, for example `Scheduled 2026-11-11 12:00 ET`. Add a row for anyone missing, such as a one-person send.
+2. On "Weekly prospects", find each person's row by email and update the Send status cell, for example `Scheduled 2026-11-12 13:00 ET`. Add a row for anyone missing, such as a one-person send.
 3. Read the cells back to check them, then run `mark-sheet`.
 
 Without the connector, skip this and say so. The outbox keeps the status, so it can be caught up later.

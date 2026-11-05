@@ -12,7 +12,13 @@ Copy it into your scratchpad directory and upload from there. Chrome's `file_upl
 
 Verify the mailbox and the compose **From** address are both `sender_mailbox`, ignoring case. A connected personal Outlook account is never a fallback, and browser sign-in is separate from connector sign-in. If Vanderbilt isn't available, ask Jesse to sign in. Never type a password.
 
-**3. Work out the delivery time.** The default is 12:00 PM Eastern (`send_time_eastern`) on the next calendar day in `America/New_York`, weekends included. Honor a different date or time Jesse asks for. Confirm the timezone from the schedule dialog or mailbox settings. If Outlook uses another timezone, convert. Jesse is often in Central time, where noon Eastern shows as 11:00 AM. If you can't verify the timezone, save drafts instead of scheduling and explain why.
+**3. Work out the delivery time.** Every email goes out on **Thursday at 1:00 PM Eastern**, every week. Jesse says "EST", but treat it as Eastern clock time all year, so it stays 1:00 PM in summer too. Get the exact date from the script instead of working it out by hand:
+```
+python -I scripts/outbox.py when
+```
+Run it once, at the start, and use that one date and time for the whole batch. It picks the next Thursday with at least 2 hours to spare, because a full batch takes a while and a slot that passes mid-run would split the list. On a Thursday close to or past 1:00 PM it moves to the following Thursday, so tell Jesse when that happens.
+
+Honor a different date or time only if Jesse asks for it in this conversation. Confirm the timezone from the schedule dialog or mailbox settings, and enter the time that matches it. Jesse is often in Central time, where 1:00 PM Eastern shows as 12:00 PM; `when` prints both. If you can't verify the timezone, save drafts instead of scheduling and explain why.
 
 **4. Check for duplicates once, for the whole batch.** Look through Drafts and Sent Items for the approved addresses (`references/sources.md` has a fast way to read the list).
 - A matching Vanderbilt draft: reuse it, and keep one copy of the attachment.
@@ -22,7 +28,7 @@ Verify the mailbox and the compose **From** address are both `sender_mailbox`, i
 
 ## For each email, one at a time
 
-Get the next one with `python -I scripts/outbox.py next`. Use its subject and body exactly. Don't rewrite them from memory.
+Finish one email completely, including marking it, before starting the next. Get the next one with `python -I scripts/outbox.py next`. Use its subject and body exactly. Don't rewrite them from memory.
 
 1. **Compose.** Start a new mail. Enter To, Subject and body. Press Return after typing the address and confirm it resolved to a recipient chip.
 2. **Attach.** Use `find` for the composer's file input, then `file_upload` with the scratchpad copy.
@@ -30,7 +36,7 @@ Get the next one with `python -I scripts/outbox.py next`. Use its subject and bo
 4. **Schedule.** Open **More send options** (the arrow beside Send), then **Schedule send**. The first time, choose **Custom time** and enter the date and time. After that the dialog usually offers the last chosen time as a preset, which is faster, but read it before picking it. Commit only through the dialog's Send button.
 5. **Confirm and record.** Wait for the composer to close, then:
    ```
-   python -I scripts/outbox.py mark --email <address> --status scheduled --scheduled-for "2026-11-11 12:00 ET"
+   python -I scripts/outbox.py mark --email <address> --status scheduled --scheduled-for "2026-11-12 13:00 ET"
    ```
    Mark each email as you finish it, so an interrupted run picks up where it stopped.
 

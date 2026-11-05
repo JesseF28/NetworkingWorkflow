@@ -16,7 +16,8 @@ Usage (add --outbox PATH before the command to use a different file):
   python -I outbox.py show [--run-date D] [--status S]
   python -I outbox.py approve (--verified | --all | --names "A B" "C D") [--run-date D]
   python -I outbox.py next
-  python -I outbox.py mark --email x@y.com --status scheduled --scheduled-for "2026-11-11 12:00 ET" [--note N]
+  python -I outbox.py when
+  python -I outbox.py mark --email x@y.com --status scheduled --scheduled-for "2026-11-12 13:00 ET" [--note N]
   python -I outbox.py sheet-rows --out rows.json [--new-only] [--run-date D]
   python -I outbox.py mark-sheet [--run-date D]
 """
@@ -26,6 +27,7 @@ import json
 import os
 import sys
 import time
+import zoneinfo
 from collections import Counter
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -166,6 +168,26 @@ def cmd_next(a):
                      indent=1, ensure_ascii=False))
 
 
+def next_send_slot(now):
+    """The next send day and time that leaves enough lead time to finish a batch. `now` is Eastern."""
+    day = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].index(CFG["send_day"])
+    hour, minute = (int(x) for x in CFG["send_time_eastern"].split(":"))
+    slot = now.replace(hour=hour, minute=minute, second=0, microsecond=0) + dt.timedelta(days=(day - now.weekday()) % 7)
+    if slot - now < dt.timedelta(minutes=CFG["send_lead_minutes"]):
+        slot += dt.timedelta(days=7)
+    return slot
+
+
+def cmd_when(a):
+    eastern = zoneinfo.ZoneInfo("America/New_York")
+    now = dt.datetime.fromisoformat(a.now).replace(tzinfo=eastern) if a.now else dt.datetime.now(eastern)
+    slot = next_send_slot(now)
+    central = slot.astimezone(zoneinfo.ZoneInfo("America/Chicago"))
+    print(f"Send at: {slot.strftime('%A, %B')} {slot.day}, {slot.year}, {slot.strftime('%I:%M %p').lstrip('0')} Eastern")
+    print(f"In Central time: {central.strftime('%I:%M %p').lstrip('0')}")
+    print(f"For outbox.py mark: {slot.strftime('%Y-%m-%d %H:%M')} ET")
+
+
 def cmd_mark(a):
     items = load(a.outbox)
     found = [i for i in items if key(i["email"]) == key(a.email)]
@@ -232,6 +254,8 @@ def main():
     who.add_argument("--names", nargs="+")
     ap.add_argument("--run-date")
     sub.add_parser("next")
+    wh = sub.add_parser("when")
+    wh.add_argument("--now", help="Eastern time to calculate from, for testing, e.g. 2026-11-12T09:00")
     mk = sub.add_parser("mark")
     mk.add_argument("--email", required=True)
     mk.add_argument("--status", required=True, choices=sorted(MOVES))
@@ -244,7 +268,7 @@ def main():
     ms = sub.add_parser("mark-sheet")
     ms.add_argument("--run-date")
     a = p.parse_args()
-    {"add": cmd_add, "show": cmd_show, "approve": cmd_approve, "next": cmd_next, "mark": cmd_mark,
+    {"add": cmd_add, "show": cmd_show, "approve": cmd_approve, "next": cmd_next, "when": cmd_when, "mark": cmd_mark,
      "sheet-rows": cmd_sheet_rows, "mark-sheet": cmd_mark_sheet}[a.cmd](a)
 
 

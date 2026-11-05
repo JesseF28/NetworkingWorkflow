@@ -1,6 +1,6 @@
 ---
 name: networking-workflow
-description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the approved emails from Jesse's Vanderbilt Outlook with Fagen.pdf attached. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, or when the Tuesday scheduled run fires, even if they don't name the skill.
+description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the approved emails for Thursdays at 1 PM Eastern from Jesse's Vanderbilt Outlook with Fagen.pdf attached. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, or when the Tuesday scheduled run fires, even if they don't name the skill.
 ---
 
 # Networking workflow
@@ -13,7 +13,7 @@ Jesse Fagen is a Vanderbilt freshman (math + economics) networking toward PE, VC
 | 2. Write emails | Subject and body in Jesse's template | Below, `references/email-template.md` | Yes |
 | 3. Add to master list | Google Doc, local log, tracker sheet, outbox | `references/master-list.md` | Yes |
 | Approval | Jesse says who gets emailed | Below | **Jesse only** |
-| 4. Schedule send | Outlook schedule send with Fagen.pdf | `references/schedule-send.md` | **No** |
+| 4. Schedule send | Outlook schedule send with Fagen.pdf, for Thursday at 1 PM Eastern | `references/schedule-send.md` | **No** |
 | 5. Update master list | Record what was scheduled | `references/master-list.md` | With stage 4 |
 
 All IDs, paths and rules are in `config.json`. Run scripts from this folder. Read each stage's reference when you reach that stage, not before.
@@ -28,17 +28,32 @@ All IDs, paths and rules are in `config.json`. Run scripts from this folder. Rea
 | A brief, a document or pasted notes about one person | The one-person path below |
 | "What's queued?", "did those go out?" | `outbox.py show`, plus the Outlook check in stage 4 if they want it confirmed |
 
-## Order: what runs together and what doesn't
+## Order: one step after another
 
-The stages run one after another, because each one needs the last one's result. You can't write to someone until they've passed the checks, and most candidates don't pass. Writing all the emails in one pass is also what keeps 20 hooks and questions from sounding alike.
+Jesse wants this run strictly in sequence. Do every step yourself, in the order written, and finish each one before starting the next. Don't start subagents or overlap stages. Each stage needs the last one's result: you can't write to someone until they've passed the checks, and most candidates don't pass. Writing all the emails in one pass is also what keeps 20 hooks and questions from sounding alike. In stage 4, overlapping clicks are how messages got unscheduled in October.
 
-Inside stage 1 there is real room to overlap:
+A stage is done only when its check passes:
 
-- **Public web research can run in parallel.** If you can start subagents, split LinkedIn, Mergr and firm-site searches across up to 3 of them by region (NY/NJ/CT, rest of the East, Central and West). Each returns candidates as JSON. They share the stage 1 budget of about 150 tool calls.
-- **Chrome work can't.** PitchBook, AUM13F and Outlook share one browser, and PitchBook has a monthly search limit. Keep these in the main session, one at a time.
-- **Stage 4 is strictly one email at a time.** There's one composer, and overlapping clicks are how messages got unscheduled in October.
+| Stage | Done when |
+|---|---|
+| 1. Find people | Every person meets every criterion in `find-people.md`, has a sourced class year and a labeled email, and `dnc.py check` flags nobody |
+| 2. Write emails | Each email has a hook based on a real fact, a question that fits the role, and the exact availability line |
+| 3. Add to master list | `build_doc.py validate` passes, the doc is uploaded and read back, and people are in the log, the outbox and the sheet (or you've said why the sheet wasn't updated) |
+| Approval | Jesse has said who to send, in chat |
+| 4. Schedule send | Every approved email is marked in the outbox, and the final Outlook check is finished |
+| 5. Update master list | Send statuses on the sheet are read back and match the outbox |
 
-Merge everything into one candidate list and run `dnc.py check` once before spending effort on email addresses.
+If a check fails, fix it before moving on. If it can't be fixed, stop and tell Jesse what's blocking it instead of carrying on with a partial result. The exception is a short list: fewer than 20 strong people is fine, as long as the doc says why.
+
+## The weekly rhythm
+
+| When | What happens |
+|---|---|
+| Tuesday 10 a.m. | The scheduled run does stages 1–3 and stops |
+| Tuesday to Thursday morning | Jesse reviews the doc and says who to send, then stages 4–5 run in that chat |
+| Thursday 1 PM Eastern | Outlook sends everything that was scheduled |
+
+All emails go out in this Thursday slot, including one-person sends, unless Jesse asks for another time. `outbox.py when` gives the exact date. Approval is needed on or before Thursday morning to make that week's slot; after that, emails go the following Thursday.
 
 ## Stage 2: Write the emails
 

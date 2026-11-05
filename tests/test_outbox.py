@@ -76,7 +76,7 @@ class OutboxTest(unittest.TestCase):
         self.run_ok("approve", "--verified")
         self.run_bad("mark", "--email", "ana@example.com", "--status", "scheduled")
         self.run_ok("mark", "--email", "ana@example.com", "--status", "scheduled",
-                    "--scheduled-for", "2026-11-11 12:00 ET")
+                    "--scheduled-for", "2026-11-12 13:00 ET")
         self.assertIn("Nothing approved", self.run_ok("next"))
 
     def test_unclear_is_not_retried_without_a_note(self):
@@ -86,6 +86,23 @@ class OutboxTest(unittest.TestCase):
         self.run_bad("mark", "--email", "ana@example.com", "--status", "approved")
         self.run_ok("mark", "--email", "ana@example.com", "--status", "approved", "--note", "Unscheduled in Drafts")
         self.assertIn("ana@example.com", self.run_ok("next"))
+
+    def test_send_slot_is_the_next_thursday_at_1pm_eastern(self):
+        cases = {
+            "2026-11-10T10:00": "2026-11-12 13:00 ET",  # Tuesday run
+            "2026-11-12T09:00": "2026-11-12 13:00 ET",  # Thursday morning, enough time
+            "2026-11-12T11:30": "2026-11-19 13:00 ET",  # Thursday, too close to finish a batch
+            "2026-11-12T15:00": "2026-11-19 13:00 ET",  # Thursday, already passed
+            "2026-11-13T08:00": "2026-11-19 13:00 ET",  # Friday
+            "2026-07-14T10:00": "2026-07-16 13:00 ET",  # summer, daylight time
+        }
+        for now, want in cases.items():
+            self.assertIn(f"For outbox.py mark: {want}", self.run_ok("when", "--now", now), now)
+
+    def test_send_slot_shows_central_time(self):
+        out = self.run_ok("when", "--now", "2026-11-10T10:00")
+        self.assertIn("Thursday, November 12, 2026, 1:00 PM Eastern", out)
+        self.assertIn("In Central time: 12:00 PM", out)
 
     def test_sheet_rows_only_new_after_marking(self):
         rows_path = os.path.join(self.dir.name, "rows.json")

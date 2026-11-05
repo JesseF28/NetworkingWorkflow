@@ -19,6 +19,10 @@ Find people → Write emails → Add to master list → You approve → Schedule
 
 The Tuesday 10 a.m. scheduled run does the first row automatically. **Nothing is ever scheduled without your approval in chat.**
 
+Approved emails go out on **Thursdays at 1 PM Eastern**. Approve by Thursday morning to make that week's send; after that, they go the following Thursday. To change the day or time, edit `send_day` and `send_time_eastern` in `config.json`.
+
+Every step runs one after another, and a step only starts once the last one passes its check.
+
 ## What's in here
 
 | Path | Purpose |
