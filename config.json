@@ -1,0 +1,38 @@
+{
+  "tracker_sheet_id": "1s-tHHfYPikG0wOIp69OeNWGCpAuZ4Mp0sa0rWlHadc0",
+  "tracker_sheet_url": "https://docs.google.com/spreadsheets/d/1s-tHHfYPikG0wOIp69OeNWGCpAuZ4Mp0sa0rWlHadc0/edit",
+  "tracker_weekly_tab": "Weekly prospects",
+  "drive_folder_id": "1BFKA1-BDl_PZOApprMIaJrbJrMViuDbj",
+  "drive_folder_url": "https://drive.google.com/drive/folders/1BFKA1-BDl_PZOApprMIaJrbJrMViuDbj",
+  "prospect_log_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/prospect-log.csv",
+  "firm_aum_cache_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/firm-aum-cache.csv",
+  "prospect_pool_csv": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/prospect-pool.csv",
+  "outbox_json": "C:/Users/jesse/OneDrive/Documents/NetworkingCalls/outbox.json",
+  "outlook_web_url": "https://outlook.cloud.microsoft/mail/sentitems",
+  "outlook_mail_url": "https://outlook.cloud.microsoft/mail/",
+  "sender_mailbox": "jesse.r.fagen@vanderbilt.edu",
+  "attachment_name": "Fagen.pdf",
+  "attachment_path": "C:/Users/jesse/Downloads/Fagen.pdf",
+  "send_time_eastern": "12:00",
+  "pitchbook_url": "https://my.pitchbook.com/",
+  "aum13f_url": "https://aum13f.com/",
+  "max_aum_musd": 2500,
+  "grad_year_min": 2020,
+  "grad_year_max": 2026,
+  "per_week": 20,
+  "max_per_firm": 2,
+  "locations": [
+    "US"
+  ],
+  "preferred_locations": [
+    "NY",
+    "NJ",
+    "CT"
+  ],
+  "sender": {
+    "name": "Jesse Fagen",
+    "school_year": "freshman",
+    "major": "mathematics and economics"
+  },
+  "availability": "Would you be open to a 15–20 minute call next week? I'm available from 11 AM to 1 PM EST or from 4 PM to 7 PM EST, on Monday and Friday. I'm also available from 4 PM to 7 PM EST on Wednesday and from 5:30 PM to 7:30 PM EST on Tuesday/Thursday. If any of these times work for you, I'd be happy to send you a calendar invite. If these times don't work, I'd be able to work around your schedule."
+}
