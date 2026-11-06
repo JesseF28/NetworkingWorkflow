@@ -1,7 +1,7 @@
 """The outbox: every written email, from "needs approval" through "scheduled".
 
 It carries a run's emails between sessions (the Tuesday run writes them, a later
-chat schedules them), enforces that nothing is scheduled without Jesse's approval,
+chat can schedule them), makes sure nothing is scheduled until it's released,
 and lets an interrupted scheduling run pick up where it stopped.
 
 Status flow:
@@ -34,7 +34,8 @@ HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 with open(os.path.join(HERE, "config.json"), encoding="utf-8") as f:
     CFG = json.load(f)
 
-# Where each status may go next. Approval only happens through the `approve` command.
+# Where each status may go next. Release only happens through the `approve` command,
+# which the skill runs itself once a list has passed its checks.
 MOVES = {
     "needs_approval": {"skipped"},
     "approved": {"draft_saved", "scheduled", "unclear", "failed", "skipped"},
@@ -53,7 +54,7 @@ SHEET_COLUMNS = ["Contact", "Firm", "Stage", "Next action", "Email", "Email conf
 SHEET_STAGE = {"needs_approval": "Draft saved", "approved": "Draft saved", "draft_saved": "Draft saved",
                "scheduled": "Scheduled — confirm sent", "unclear": "Hold", "failed": "Hold", "skipped": "Hold"}
 NEXT_ACTION = {
-    "needs_approval": "Approve in chat to schedule for Thursday 1 PM Eastern.",
+    "needs_approval": "Waiting to be scheduled for Thursday 1 PM Eastern.",
     "approved": "Waiting to be scheduled in Outlook.",
     "draft_saved": "Draft saved in Outlook; finish and schedule it.",
     "scheduled": "Sunday sync confirms it was sent.",
@@ -121,7 +122,7 @@ def cmd_add(a):
                       "approved_on": None, "scheduled_for": None, "on_sheet": False, "history": []})
         added += 1
     save(a.outbox, items)
-    print(f"{added} added to {a.outbox}, waiting for approval.")
+    print(f"{added} added to {a.outbox}, waiting to be released.")
 
 
 def cmd_show(a):
@@ -210,7 +211,7 @@ def cmd_mark(a):
     old = i["status"]
     if a.status not in MOVES[old]:
         fail(f"{i['name']} is '{old}' and can't move to '{a.status}'"
-             + ("; Jesse has to approve it first" if old == "needs_approval" else ""))
+             + ("; release it with `approve` first" if old == "needs_approval" else ""))
     if (old, a.status) in NOTE_REQUIRED and not a.note:
         fail(f"moving {i['name']} from '{old}' back to 'approved' needs --note saying what Outlook showed")
     if a.status == "scheduled" and not a.scheduled_for:
