@@ -3,26 +3,26 @@
 One Claude skill that goes from finding people to making emails to schedule sending them. It replaces `weekly-networking-prospects`, `vanderbilt-outreach` and `networking-sent-sync`.
 
 ```
-Find people → Write emails → Add to master list → You approve → Schedule send → Update master list → Sync sent mail
+Find people → Write emails → Add to master list → Schedule send → Update master list → Sync sent mail
 ```
 
 ## How to use it
 
 | Say this | What happens |
 |---|---|
-| "Build this week's networking list" | Finds 20 people, writes their emails, adds them to the list, then stops for your approval |
-| "Send this week's emails" | Shows who's waiting, then schedules the ones you approve |
+| "Build this week's networking list" | Finds 20 people, writes their emails and adds them to the list, without sending anything |
+| "Send this week's emails" | Schedules anything still waiting |
 | "Send just the verified ones" | Schedules only people whose address was confirmed |
-| "Do the whole thing" | Runs everything, pausing once for your approval |
+| "Do the whole thing" | Runs everything straight through to scheduling |
 | Paste a brief or notes about one person | Writes and schedules that one email |
 | "What's queued?" | Shows every email and its status |
 | "Update the tracker from my sent mail" | Moves everyone you emailed from Prospects to Contacted |
 
-The Tuesday 10 a.m. scheduled run does the first row automatically. **Nothing is ever scheduled without your approval in chat.**
+The Tuesday 10 a.m. scheduled run does everything automatically, including scheduling the emails. **It doesn't wait for your approval**, so emails that pass the automatic checks go out, including guessed addresses. To stop one, cancel it in Outlook before Thursday.
 
 The Sunday 6 p.m. scheduled run syncs your sent mail into the Master Tracker.
 
-Approved emails go out on **Thursdays at 1 PM Eastern**. Approve by Thursday morning to make that week's send; after that, they go the following Thursday. To change the day or time, edit `send_day` and `send_time_eastern` in `config.json`.
+Emails go out on **Thursdays at 1 PM Eastern**. Anything scheduled after Thursday morning goes the following Thursday. To change the day or time, edit `send_day` and `send_time_eastern` in `config.json`.
 
 Every step runs one after another, and a step only starts once the last one passes its check.
 
@@ -30,7 +30,7 @@ Every step runs one after another, and a step only starts once the last one pass
 
 | Path | Purpose |
 |---|---|
-| `SKILL.md` | The workflow: what runs when, the approval step, the one-person path |
+| `SKILL.md` | The workflow: what runs when, the checks before sending, the one-person path |
 | `config.json` | IDs, file paths, your availability line, search rules |
 | `references/find-people.md` | Stage 1: do-not-contact list, criteria, finding emails |
 | `references/sources.md` | What worked and failed on PitchBook, LinkedIn, AUM13F and others |
@@ -40,7 +40,7 @@ Every step runs one after another, and a step only starts once the last one pass
 | `references/sent-sync.md` | Stage 6: matching Sent Items to the Master Tracker |
 | `scripts/dnc.py` | Builds and checks the do-not-contact list |
 | `scripts/build_doc.py` | Validates the list, builds the Google Doc, writes the log |
-| `scripts/outbox.py` | Tracks each email from "needs approval" to "scheduled" |
+| `scripts/outbox.py` | Tracks each email from written to scheduled |
 | `scripts/sent_sync.py`, `scripts/read_sent_items.js` | Read Sent Items and plan the tracker changes |
 | `tests/` | Tests for the outbox: `python -m unittest discover -s tests` |
 

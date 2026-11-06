@@ -1,6 +1,6 @@
 # Stage 4: Schedule send
 
-This stage puts real email in front of real people, so it only runs for people in `approved` status, and only in a conversation with Jesse (see Approval in SKILL.md). The October 18 run scheduled 15 emails this way. Its problems are written in here because each one cost time or nearly sent something wrong.
+This stage puts real email in front of real people, so it only runs for people in `approved` status (see Release in SKILL.md). It can run unattended on the Tuesday run. Nobody can answer a question then, so wherever this page says to ask Jesse, leave those emails `approved` instead, carry on with any others you safely can, and put it in the report. Approved emails stay in the outbox, so the next run or chat picks them up. The October 18 run scheduled 15 emails this way. Its problems are written in here because each one cost time or nearly sent something wrong.
 
 ## Before the first email
 
