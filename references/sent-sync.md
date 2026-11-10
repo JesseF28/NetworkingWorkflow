@@ -45,6 +45,7 @@ The order matters, because deleting from Prospects is the only step that can los
 6. Read Contacted back and confirm every new contact is there.
 7. Only then delete `prospect_rows_to_delete` with `deleteDimension`. They're listed bottom-up so row numbers stay valid. Read Prospects back.
 8. Run `sent_sync.py done --through <plan's through date>`.
+9. Do the "Sunday sync additions" in `references/dashboard.md`: log follow-up emails in the call log and read back the Dashboard scorecard.
 
 ## Stage rules
 
@@ -62,4 +63,4 @@ The outside-sender tag can't tell a person from an auto-reply, so Reply received
 
 ## Finish
 
-Report the counts for added, moved and updated, then every flag and every review item. Flags cover bounces, a second address for someone, and people emailed despite a DON'T EMAIL note in the prospect log. Link the [Master Tracker](https://docs.google.com/spreadsheets/d/1iCIwaolquBJteKIDFYuwpuQfGIgeciniHdpoW5awgmg/edit). Close any Chrome tab you opened.
+Report the counts for added, moved and updated, the Dashboard scorecard (emailed, reply rate as "x of y", follow-ups due), then every flag and every review item. Flags cover bounces, a second address for someone, and people emailed despite a DON'T EMAIL note in the prospect log. Link the [Master Tracker](https://docs.google.com/spreadsheets/d/1iCIwaolquBJteKIDFYuwpuQfGIgeciniHdpoW5awgmg/edit). Close any Chrome tab you opened.
