@@ -11,16 +11,16 @@ Find people → Write emails → Add to master list → Schedule send → Update
 | Say this | What happens |
 |---|---|
 | "Build this week's networking list" | Finds 20 people, writes their emails and adds them to the list, without sending anything |
-| "Send this week's emails" | Schedules anything still waiting |
+| "Send this week's emails" | Asks when you're free for calls, then schedules anything still waiting |
 | "Send just the verified ones" | Schedules only people whose address was confirmed |
 | "Do the whole thing" | Runs everything straight through to scheduling |
 | Paste a brief or notes about one person | Writes and schedules that one email |
 | "What's queued?" | Shows every email and its status |
 | "Update the tracker from my sent mail" | Moves everyone you emailed from Prospects to Contacted |
 
-The Tuesday 10 a.m. scheduled run does everything automatically, including scheduling the emails. **It doesn't wait for your approval**, so emails that pass the automatic checks go out, including guessed addresses. To stop one, cancel it in Outlook before Thursday.
+The Tuesday 10 a.m. scheduled run finds people, writes the emails and releases them, then stops and asks when you're free for calls. **Before anything is scheduled, the skill always asks for your availability** and puts those times into every email. Once you answer, emails that pass the automatic checks are scheduled, including guessed addresses. To stop one, cancel it in Outlook before Thursday.
 
-The Sunday 6 p.m. scheduled run syncs your sent mail into the Master Tracker.
+The Sunday 6 a.m. scheduled run syncs your sent mail into the Master Tracker.
 
 Emails go out on **Thursdays at 1 PM Eastern**. Anything scheduled after Thursday morning goes the following Thursday. To change the day or time, edit `send_day` and `send_time_eastern` in `config.json`.
 

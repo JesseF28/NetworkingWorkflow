@@ -12,7 +12,8 @@ OUTBOX = os.path.join(ROOT, "scripts", "outbox.py")
 
 def person(name, email, confidence):
     return {"name": name, "firm": "Example Capital", "email": email, "email_confidence": confidence,
-            "subject": "Vanderbilt freshman interested in private equity", "body": f"Hi {name.split()[0]},"}
+            "subject": "Vanderbilt freshman interested in private equity",
+            "body": f"Hi {name.split()[0]},\n\nHook.\n\nWould you be open to a call? Old times.\n\nBest,\nJesse Fagen"}
 
 
 class OutboxTest(unittest.TestCase):
@@ -79,8 +80,33 @@ class OutboxTest(unittest.TestCase):
                     "--scheduled-for", "2026-11-12 13:00 ET")
         self.assertIn("Nothing approved", self.run_ok("next"))
 
+    def body(self, email):
+        with open(self.box, encoding="utf-8") as f:
+            return next(i for i in json.load(f) if i["email"] == email)["body"]
+
+    def test_next_waits_for_confirmed_availability(self):
+        self.run_ok("approve", "--verified")
+        out = self.run_bad("next")
+        self.assertIn("available", out)
+        self.run_ok("availability", "--keep")
+        self.assertIn("ana@example.com", self.run_ok("next"))
+
+    def test_new_availability_replaces_only_that_paragraph(self):
+        self.run_ok("approve", "--all")
+        new = "Would you be open to a 15-20 minute call next week? I'm free Monday 3-5 PM EST."
+        self.run_ok("availability", "--text", new)
+        body = self.body("ben@example.com")
+        self.assertIn(new, body)
+        self.assertNotIn("Old times", body)
+        self.assertTrue(body.startswith("Hi Ben,\n\nHook.\n\n") and body.endswith("Best,\nJesse Fagen"))
+
+    def test_availability_must_look_like_the_template_line(self):
+        self.run_bad("availability", "--text", "Mondays work")
+        self.assertIn("Old times", self.body("ana@example.com"))
+
     def test_unclear_is_not_retried_without_a_note(self):
         self.run_ok("approve", "--verified")
+        self.run_ok("availability", "--keep")
         self.run_ok("mark", "--email", "ana@example.com", "--status", "unclear")
         self.assertIn("Nothing approved", self.run_ok("next"))
         self.run_bad("mark", "--email", "ana@example.com", "--status", "approved")

@@ -15,6 +15,7 @@ Usage (add --outbox PATH before the command to use a different file):
   python -I outbox.py add --prospects p.json --run-date 2026-11-10 [--doc-url URL]
   python -I outbox.py show [--run-date D] [--status S]
   python -I outbox.py approve (--verified | --all | --names "A B" "C D") [--run-date D]
+  python -I outbox.py availability (--text "Would you be open to ..." | --keep) [--save-config] [--run-date D]
   python -I outbox.py next
   python -I outbox.py when
   python -I outbox.py mark --email x@y.com --status scheduled --scheduled-for "2026-11-12 13:00 ET" [--note N]
@@ -171,11 +172,59 @@ def cmd_approve(a):
         print(f"Not verified, so these may bounce: {', '.join(i['name'] for i in risky)}")
 
 
+OPEN = {"needs_approval", "approved", "draft_saved", "unclear", "failed"}
+AVAILABILITY_START = "Would you be open to"
+
+
+def with_availability(body, line):
+    """Swap the availability paragraph (the one that starts "Would you be open to") for `line`."""
+    paras = body.split("\n\n")
+    hits = [n for n, p in enumerate(paras) if p.strip().startswith(AVAILABILITY_START)]
+    if len(hits) != 1:
+        return None
+    paras[hits[0]] = line
+    return "\n\n".join(paras)
+
+
+def cmd_availability(a):
+    """Record the call times Jesse confirmed for this batch, and put them in every open email."""
+    line = (a.text or CFG["availability"]).strip()
+    if not line.startswith(AVAILABILITY_START):
+        fail(f'the availability line should start "{AVAILABILITY_START}", like the template')
+    items = load(a.outbox)
+    chosen = [i for i in selected(items, a) if i["status"] in OPEN]
+    if not chosen:
+        fail("no open emails to update")
+    today = dt.date.today().isoformat()
+    for i in chosen:
+        body = with_availability(i["body"], line)
+        if body is None:
+            fail(f"{i['name']}: couldn't find exactly one paragraph starting \"{AVAILABILITY_START}\"; fix the body first")
+        i["body"], i["availability_confirmed"] = body, today
+        i["history"].append({"on": today, "status": i["status"], "note": "availability confirmed with Jesse"})
+    save(a.outbox, items)
+    if a.save_config and a.text:
+        path = os.path.join(HERE, "config.json")
+        with open(path, encoding="utf-8") as f:
+            cfg = json.load(f)
+        cfg["availability"] = line
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(cfg, f, indent=2, ensure_ascii=False)
+            f.write("\n")
+        print("Saved as the default availability in config.json.")
+    print(f"Availability confirmed for {len(chosen)}: {', '.join(i['name'] for i in chosen)}")
+
+
 def cmd_next(a):
     waiting = [i for i in load(a.outbox) if i["status"] == "approved"]
     if not waiting:
         print("Nothing approved is waiting.")
         return
+    unconfirmed = [i for i in waiting if not i.get("availability_confirmed")]
+    if unconfirmed:
+        fail(f"{len(unconfirmed)} approved emails don't have confirmed call times yet "
+             f"({', '.join(i['name'] for i in unconfirmed)}). Ask Jesse when they're available, then run "
+             "`outbox.py availability --text \"...\"` (or `--keep` if the current times still work).")
     i = waiting[0]
     print(f"{len(waiting)} approved and waiting. Next:")
     print(json.dumps({k: i.get(k) for k in ("name", "firm", "email", "email_confidence", "subject", "body")},
@@ -265,6 +314,7 @@ def cmd_mark_sheet(a):
 
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows defaults to cp1252, which garbles the en dash in "15–20"
     p = argparse.ArgumentParser()
     p.add_argument("--outbox", default=CFG["outbox_json"])
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -281,6 +331,12 @@ def main():
     who.add_argument("--all", action="store_true")
     who.add_argument("--names", nargs="+")
     ap.add_argument("--run-date")
+    av = sub.add_parser("availability")
+    line = av.add_mutually_exclusive_group(required=True)
+    line.add_argument("--text", help="the full availability paragraph Jesse confirmed")
+    line.add_argument("--keep", action="store_true", help="Jesse confirmed the current line in config.json")
+    av.add_argument("--save-config", action="store_true", help="also make --text the default in config.json")
+    av.add_argument("--run-date")
     sub.add_parser("next")
     wh = sub.add_parser("when")
     wh.add_argument("--now", help="Eastern time to calculate from, for testing, e.g. 2026-11-12T09:00")
@@ -296,7 +352,8 @@ def main():
     ms = sub.add_parser("mark-sheet")
     ms.add_argument("--run-date")
     a = p.parse_args()
-    {"add": cmd_add, "show": cmd_show, "approve": cmd_approve, "next": cmd_next, "when": cmd_when, "mark": cmd_mark,
+    {"add": cmd_add, "show": cmd_show, "approve": cmd_approve, "availability": cmd_availability, "next": cmd_next,
+     "when": cmd_when, "mark": cmd_mark,
      "sheet-rows": cmd_sheet_rows, "mark-sheet": cmd_mark_sheet}[a.cmd](a)
 
 

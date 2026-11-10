@@ -1,8 +1,19 @@
 # Stage 4: Schedule send
 
-This stage puts real email in front of real people, so it only runs for people in `approved` status (see Release in SKILL.md). It can run unattended on the Tuesday run. Nobody can answer a question then, so wherever this page says to ask Jesse, leave those emails `approved` instead, carry on with any others you safely can, and put it in the report. Approved emails stay in the outbox, so the next run or chat picks them up. The October 18 run scheduled 15 emails this way. Its problems are written in here because each one cost time or nearly sent something wrong.
+This stage puts real email in front of real people, so it only runs for people in `approved` status (see Release in SKILL.md). It always starts by asking Jesse for their availability (step 0), so it can't finish unattended. On an unattended run, stop at step 0 and put the question in the report. Approved emails stay in the outbox, so the chat where Jesse answers picks them up. Wherever this page says to ask Jesse about something else and nobody can answer, leave those emails `approved`, carry on with any others you safely can, and report it. The October 18 run scheduled 15 emails this way. Its problems are written in here because each one cost time or nearly sent something wrong.
 
 ## Before the first email
+
+**0. Ask Jesse when they're available. Always, before anything is scheduled.** The availability line written in stage 2 is the default from `config.json`, and Jesse's free times change from week to week. Show Jesse the current line and the delivery date from `outbox.py when`, and ask which times they're free for calls the week after it. Then wait for the answer. Don't open Outlook or compose anything until Jesse replies.
+
+- **New times:** turn them into one paragraph in the same style as the current line (it must start "Would you be open to"), show it to Jesse, and once they OK it run:
+  ```
+  python -I scripts/outbox.py availability --text "<the full paragraph>" [--save-config]
+  ```
+  It replaces the availability paragraph in every open email in the outbox. Add `--save-config` if Jesse wants it as the new default.
+- **Same times:** `python -I scripts/outbox.py availability --keep`.
+
+`outbox.py next` refuses to hand out an email until this step has run, so it can't be skipped by accident. Asking in the same chat where Jesse approved the send is expected: "send this week's emails" approves sending, not the times.
 
 **1. Get the attachment ready.** Find the exact `Fagen.pdf`: a copy Jesse supplied for this request, otherwise `attachment_path` in config, then the current workspace and accessible user files. Confirm it's a readable PDF. If it's missing or several plausible copies remain, ask Jesse which one.
 

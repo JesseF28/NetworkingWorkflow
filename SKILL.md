@@ -13,7 +13,7 @@ Jesse Fagen is a Vanderbilt freshman (math + economics) networking toward PE, VC
 | 2. Write emails | Subject and body in Jesse's template | Below, `references/email-template.md` | Yes |
 | 3. Add to master list | Google Doc, local log, Master Tracker, outbox | `references/master-list.md` | Yes |
 | Release | Automatic once stage 3 passes | Below | Yes |
-| 4. Schedule send | Outlook schedule send with Fagen.pdf, for Thursday at 1 PM Eastern | `references/schedule-send.md` | Yes |
+| 4. Schedule send | Ask Jesse when they're free for calls, then Outlook schedule send with Fagen.pdf, for Thursday at 1 PM Eastern | `references/schedule-send.md` | No: it starts with a question for Jesse |
 | 5. Update master list | Record what was scheduled | `references/master-list.md` | With stage 4 |
 | 6. Sent mail sync | Move emailed people to Contacted, update stages | `references/sent-sync.md` | Yes, after the first catch-up run |
 | 7. Dashboard and call log | Keep the Dashboard tab's call log and auto-reply list current; log each conversation | `references/dashboard.md` | Sunday parts run with stage 6 |
@@ -24,7 +24,8 @@ All IDs, paths and rules are in `config.json`. Run scripts from this folder. Rea
 
 | Jesse says | Do |
 |---|---|
-| The Tuesday scheduled run, "do the whole thing", "find people and send them" | Stages 1–5, straight through, with no pause for approval |
+| The Tuesday scheduled run | Stages 1–3 and Release, then stop: ask for next week's availability in the final report |
+| "Do the whole thing", "find people and send them" | Stages 1–5 straight through, pausing only to ask Jesse's availability before stage 4 |
 | "Build this week's list", "find me people", or anything asking only for a list | Stages 1–3, then stop and report. A request for a list isn't a request to send |
 | "Send this week's emails", "schedule them", "send the verified ones" | Release who Jesse named, then stages 4–5 |
 | A brief, a document or pasted notes about one person | The one-person path below |
@@ -44,7 +45,7 @@ A stage is done only when its check passes:
 | 2. Write emails | Each email has a hook based on a real fact, a question that fits the role, and the exact availability line |
 | 3. Add to master list | `build_doc.py validate` passes, the doc is uploaded and read back, and people are in the log, the outbox and the sheet (or you've said why the sheet wasn't updated) |
 | Release | Everyone on the validated list is `approved` in the outbox |
-| 4. Schedule send | Every approved email is marked in the outbox, and the final Outlook check is finished |
+| 4. Schedule send | Jesse confirmed the call times (`outbox.py availability`), every approved email is marked in the outbox, and the final Outlook check is finished |
 | 5. Update master list | Stage and Target date on the sheet are read back and match the outbox |
 | 6. Sent mail sync | Every planned change is read back from the sheet, and `sent_sync.py done` has run |
 | 7. Dashboard and call log | New call log rows are read back, and Dashboard B5:B12 show no errors |
@@ -55,7 +56,7 @@ If a check fails, fix it before moving on. If it can't be fixed, stop and tell J
 
 | When | What happens |
 |---|---|
-| Tuesday 10 a.m. | The scheduled run does stages 1–5, so the week's emails are scheduled that day |
+| Tuesday 10 a.m. | The scheduled run does stages 1–3 and releases the list, then asks for Jesse's availability. Once Jesse replies, the emails are scheduled |
 | Thursday 1 PM Eastern | Outlook sends everything that was scheduled |
 | Sunday 6 a.m. | The scheduled run does stage 6, moving everyone who was emailed to Contacted, so the tracker is current before the noon call schedule |
 
@@ -70,11 +71,11 @@ Read `references/email-template.md`. It has Jesse's exact template and real exam
 
 Subject: `Vanderbilt freshman interested in <private equity | venture capital | growth equity | hedge funds>`, matching the firm's strategy.
 
-The availability line is fixed (`config.json` → `availability`). Copy it verbatim.
+Write the availability line from `config.json` → `availability`, verbatim. It's a placeholder until stage 4: Jesse's free times change week to week, so stage 4 asks for them first and `outbox.py availability` swaps the confirmed times into every queued email before anything is scheduled.
 
 ## Release
 
-Jesse doesn't approve emails one by one. On the Tuesday run or a "do the whole thing" request, go straight from stage 3 to stage 4 by releasing the week's list:
+Jesse doesn't approve emails one by one. On the Tuesday run or a "do the whole thing" request, release the week's list as soon as stage 3 passes. Releasing isn't scheduling: stage 4 still starts by asking Jesse for their availability, and the Tuesday run stops there.
 ```
 python -I scripts/outbox.py approve --all --run-date <YYYY-MM-DD>
 ```
