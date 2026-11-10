@@ -51,5 +51,9 @@
   ],
   "ignore_names": [
     "randi fagen"
-  ]
+  ],
+  "outlook_calendar_url": "https://outlook.cloud.microsoft/calendar/view/week",
+  "google_calendar_url": "https://calendar.google.com/calendar/r/agenda",
+  "call_schedule_day": "Sunday",
+  "call_schedule_time_eastern": "12:00"
 }

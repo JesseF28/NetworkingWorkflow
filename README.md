@@ -38,10 +38,13 @@ Every step runs one after another, and a step only starts once the last one pass
 | `references/master-list.md` | Stages 3 and 5: doc, log, outbox, Master Tracker |
 | `references/schedule-send.md` | Stage 4: Outlook steps and lessons from past runs |
 | `references/sent-sync.md` | Stage 6: matching Sent Items to the Master Tracker |
+| `references/dashboard.md` | Stage 7: Dashboard tab and call log |
+| `references/weekly-calls.md` | Stage 8: Sunday noon schedule of the week's calls, with prep |
 | `scripts/dnc.py` | Builds and checks the do-not-contact list |
 | `scripts/build_doc.py` | Validates the list, builds the Google Doc, writes the log |
 | `scripts/outbox.py` | Tracks each email from written to scheduled |
 | `scripts/sent_sync.py`, `scripts/read_sent_items.js` | Read Sent Items and plan the tracker changes |
+| `scripts/check_pronouns.py` | Flags unsourced pronouns in the call schedule draft |
 | `tests/` | Tests for the outbox: `python -m unittest discover -s tests` |
 
 Prospect data (the log, pool, AUM cache, outbox and sync state) stays in `OneDrive/Documents/NetworkingCalls` and is deliberately not in this repo.

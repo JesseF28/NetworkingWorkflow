@@ -1,6 +1,6 @@
 ---
 name: networking-workflow
-description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the emails for Thursdays at 1 PM Eastern from Jesse's Vanderbilt Outlook with Fagen.pdf attached, then logs sent mail into the Master Tracker every Sunday. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, to update the tracker from sent mail, log who they emailed or check who's been contacted, or when the Tuesday or Sunday scheduled run fires, even if they don't name the skill.
+description: Jesse's whole networking outreach pipeline in one skill. Finds new Vanderbilt undergrad alumni (classes of 2020–2026) at PE, VC, growth equity and hedge fund firms under $2.5B AUM, writes a personalized email for each, adds them to the master networking list, and schedule-sends the emails for Thursdays at 1 PM Eastern from Jesse's Vanderbilt Outlook with Fagen.pdf attached, then logs sent mail into the Master Tracker every Sunday. Use this whenever Jesse asks for new people to network with, this week's networking list, cold-email or coffee-chat targets, to write, schedule or send outreach (a whole list, or one person from a brief or pasted notes), to "send this week's emails", to check what's queued, to update the tracker from sent mail, log who they emailed or check who's been contacted, to see or prep for this week's networking calls, or when the Tuesday or Sunday scheduled runs fire, even if they don't name the skill.
 ---
 
 # Networking workflow
@@ -17,6 +17,7 @@ Jesse Fagen is a Vanderbilt freshman (math + economics) networking toward PE, VC
 | 5. Update master list | Record what was scheduled | `references/master-list.md` | With stage 4 |
 | 6. Sent mail sync | Move emailed people to Contacted, update stages | `references/sent-sync.md` | Yes, after the first catch-up run |
 | 7. Dashboard and call log | Keep the Dashboard tab's call log and auto-reply list current; log each conversation | `references/dashboard.md` | Sunday parts run with stage 6 |
+| 8. Weekly call schedule | Read-only: the next 7 days of networking calls from Outlook and Google Calendar, with prep notes from the tracker | `references/weekly-calls.md` | Yes, Sunday noon |
 
 All IDs, paths and rules are in `config.json`. Run scripts from this folder. Read each stage's reference when you reach that stage, not before.
 
@@ -32,6 +33,7 @@ All IDs, paths and rules are in `config.json`. Run scripts from this folder. Rea
 | "What's queued?", "did those go out?" | `outbox.py show`, plus the Outlook check in stage 4 if they want it confirmed |
 | The Sunday scheduled run, "update the tracker from my sent mail", "who have I contacted?" | Stage 6 |
 | A recording, transcript or notes from a call; "log this call", "how's outreach going?", "who should I follow up with?" | Stage 7 |
+| The Sunday noon scheduled run, "what calls do I have this week?", "prep me for my coffee chats" | Stage 8 only. It reads calendars and changes nothing |
 
 ## Order: one step after another
 
@@ -49,6 +51,7 @@ A stage is done only when its check passes:
 | 5. Update master list | Stage and Target date on the sheet are read back and match the outbox |
 | 6. Sent mail sync | Every planned change is read back from the sheet, and `sent_sync.py done` has run |
 | 7. Dashboard and call log | New call log rows are read back, and Dashboard B5:B12 show no errors |
+| 8. Weekly call schedule | Both calendars were read (or the schedule says which wasn't), every call has a time, person and prep built only from what was found, and `check_pronouns.py` flags nothing unsourced |
 
 If a check fails, fix it before moving on. If it can't be fixed, stop and tell Jesse what's blocking it instead of carrying on with a partial result. The exception is a short list: fewer than 20 strong people is fine, as long as the doc says why.
 
@@ -59,6 +62,7 @@ If a check fails, fix it before moving on. If it can't be fixed, stop and tell J
 | Tuesday 10 a.m. | The scheduled run does stages 1–3 and releases the list, then asks for Jesse's availability. Once Jesse replies, the emails are scheduled |
 | Thursday 1 PM Eastern | Outlook sends everything that was scheduled |
 | Sunday 6 a.m. | The scheduled run does stage 6, moving everyone who was emailed to Contacted, so the tracker is current before the noon call schedule |
+| Sunday noon Eastern | The scheduled run does stage 8: one schedule of the coming week's calls, with prep |
 
 All emails go out in this Thursday slot, including one-person sends, unless Jesse asks for another time. `outbox.py when` gives the exact date. Emails released after Thursday morning go the following Thursday.
 
