@@ -16,6 +16,7 @@ Jesse Fagen is a Vanderbilt freshman (math + economics) networking toward PE, VC
 | 4. Schedule send | Outlook schedule send with Fagen.pdf, for Thursday at 1 PM Eastern | `references/schedule-send.md` | Yes |
 | 5. Update master list | Record what was scheduled | `references/master-list.md` | With stage 4 |
 | 6. Sent mail sync | Move emailed people to Contacted, update stages | `references/sent-sync.md` | Yes, after the first catch-up run |
+| 7. Dashboard and call log | Keep the Dashboard tab's call log and auto-reply list current; log each conversation | `references/dashboard.md` | Sunday parts run with stage 6 |
 
 All IDs, paths and rules are in `config.json`. Run scripts from this folder. Read each stage's reference when you reach that stage, not before.
 
@@ -29,6 +30,7 @@ All IDs, paths and rules are in `config.json`. Run scripts from this folder. Rea
 | A brief, a document or pasted notes about one person | The one-person path below |
 | "What's queued?", "did those go out?" | `outbox.py show`, plus the Outlook check in stage 4 if they want it confirmed |
 | The Sunday scheduled run, "update the tracker from my sent mail", "who have I contacted?" | Stage 6 |
+| A recording, transcript or notes from a call; "log this call", "how's outreach going?", "who should I follow up with?" | Stage 7 |
 
 ## Order: one step after another
 
@@ -45,6 +47,7 @@ A stage is done only when its check passes:
 | 4. Schedule send | Every approved email is marked in the outbox, and the final Outlook check is finished |
 | 5. Update master list | Stage and Target date on the sheet are read back and match the outbox |
 | 6. Sent mail sync | Every planned change is read back from the sheet, and `sent_sync.py done` has run |
+| 7. Dashboard and call log | New call log rows are read back, and Dashboard B5:B12 show no errors |
 
 If a check fails, fix it before moving on. If it can't be fixed, stop and tell Jesse what's blocking it instead of carrying on with a partial result. The exception is a short list: fewer than 20 strong people is fine, as long as the doc says why.
 
@@ -54,7 +57,7 @@ If a check fails, fix it before moving on. If it can't be fixed, stop and tell J
 |---|---|
 | Tuesday 10 a.m. | The scheduled run does stages 1–5, so the week's emails are scheduled that day |
 | Thursday 1 PM Eastern | Outlook sends everything that was scheduled |
-| Sunday 6 p.m. | The scheduled run does stage 6, moving everyone who was emailed to Contacted |
+| Sunday 6 a.m. | The scheduled run does stage 6, moving everyone who was emailed to Contacted, so the tracker is current before the noon call schedule |
 
 All emails go out in this Thursday slot, including one-person sends, unless Jesse asks for another time. `outbox.py when` gives the exact date. Emails released after Thursday morning go the following Thursday.
 
@@ -102,6 +105,6 @@ Tell Jesse, in this order:
 1. What's done: the doc link, how many people, and the Verified / Pattern-matched / Guessed split.
 2. What's scheduled, if stage 4 ran: count, delivery time in Eastern, how many guessed addresses went in, and anyone left as a draft or marked `unclear`.
 3. What's waiting on them: Outlook sign-in if scheduling couldn't run, the master sheet if it wasn't updated, or the log if Excel had it locked.
-4. Anything that blocked the run, such as PitchBook being signed out or fewer than 20 people.
+4. Which sources the people came from, and anything that limited the run, such as PitchBook being signed out or at its search limit, or fewer than 20 people (and which other sources you tried).
 
 Keep "scheduled" and "saved as a draft" separate, and only say scheduled if Outlook showed it. Close any Chrome tabs you opened.

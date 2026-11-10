@@ -32,17 +32,21 @@ Criteria (all required unless noted):
 - **Undergrad, not Owen.** LinkedIn often shows just "Vanderbilt University" for Owen MBA graduates. If the person also lists another undergraduate school, or the Vanderbilt entry is an MBA, drop them. If the degree type is unclear, look for the bio on the firm site.
 - At most **2 people from the same firm** per week, so the list isn't one firm's team page.
 
-**Start with the prospect pool.** `prospect_pool_csv` (path in config) holds people already screened in earlier runs. `ready` rows passed every check, including AUM and an email from PitchBook. `check` rows need the one check named in their notes. `no` rows were ruled out, so skip them. Before using a pool row, run it through `dnc.py check`, confirm the person still holds that role (firm team page or PitchBook), and confirm their grad year, since older pool rows were screened before the 2020–2026 rule. When you screen new people this week who qualify but don't make the 20, add them to the pool as `ready` or `check` so next week starts with them.
+**Start with the prospect pool.** `prospect_pool_csv` (path in config) holds people already screened in earlier runs. `ready` rows passed every check, including AUM and an email. `check` rows need the one check named in their notes. `no` rows were ruled out, so skip them. Before using a pool row, run it through `dnc.py check`, confirm the person still holds that role (firm team page, PitchBook or another recent source), and confirm their grad year, since older pool rows were screened before the 2020–2026 rule. When you screen new people this week who qualify but don't make the 20, add them to the pool as `ready` or `check` so next week starts with them.
 
-Read `references/sources.md` before searching. It records what worked and what failed in earlier runs. In short:
-- **PitchBook** (Chrome, `my.pitchbook.com`, Jesse's Vanderbilt account) is the only source that reliably produces 20 a week: filter people by education = Vanderbilt, location and investor type, and it usually shows emails too. If Chrome lands on a sign-in page, follow the sign-in steps in sources.md: enter Jesse's email and wait for them to approve the push. **Never type a password**; if one is required, or the push isn't approved within about 5 minutes, continue with the other sources and put "PitchBook was signed out" in the run notes. Without PitchBook, expect about 8–12 people, not 20.
-- **LinkedIn via WebSearch** with `allowed_domains: ["linkedin.com"]` is the best public fallback for finding alumni. Avoid running many Google searches in Chrome: Google showed a CAPTCHA after about 20 queries and stayed blocked.
-- **AUM13F.com** confirms regulatory AUM from Form ADV. Its site search is the fast way in (see sources.md). Record the AUM figure and the page URL for every firm.
-- **Firm team pages** confirm current role, location and often the Vanderbilt degree and email.
+Read `references/sources.md` before searching. It records what worked and what failed in earlier runs.
+
+**PitchBook is a recommendation, not a requirement.** It's the best single starting point when it works, because one screen gives Vanderbilt education, role, firm and usually an email. But it often doesn't work: the session expires, the People Screener hits its monthly search limit, or the saved searches are already worked through and everyone left is on the do-not-contact list. Any of those is a reason to switch sources, not a reason to end the run with a short list. The goal is 20 new, qualifying people; where they come from doesn't matter as long as each one passes every criterion above with a cited source.
+
+So, in practice:
+- **Try PitchBook first** (Chrome, `my.pitchbook.com`, Jesse's Vanderbilt account). If Chrome lands on a sign-in page, follow the sign-in steps in sources.md: enter Jesse's email and wait for them to approve the push. **Never type a password**; if one is required, or the push isn't approved within about 5 minutes, move on. Do the same if the screener shows its search limit, or if a pass turns up nobody new. Note which of these happened in the run notes.
+- **Then work through the other streams** in sources.md ("Finding people beyond PitchBook"). Don't stop after one or two: rotate through several (LinkedIn via WebSearch, Mergr, firm team-page crawls, Vanderbilt student investment clubs and athletics rosters, new-hire press releases, Vanderbilt news and class notes, and so on), spending a share of the budget on each, until you reach 20 or run out of budget. A stream that gave nothing last week may still give something with different queries, cities or firm lists.
+- **When a stream does work, note it** at the bottom of sources.md so next week starts there.
+- Supporting sources, whichever stream found the person: **AUM13F.com** confirms regulatory AUM from Form ADV (record the figure and page URL for every firm), and **firm team pages** confirm current role, location and often the Vanderbilt degree and email. Avoid running many Google searches in Chrome: Google showed a CAPTCHA after about 20 queries and stayed blocked.
 
 **Firm AUM cache.** Before checking a firm's AUM, look it up in `firm_aum_cache_csv` (path in config). After you check a new firm, append a row (`firm,aum_musd,qualifies,source,checked`), including firms that fail. Many promising leads are at firms over the cap, and the cache stops each week from re-checking them. Treat entries older than a year as needing a recheck.
 
-**Budget.** Stop researching at roughly 150 tool calls. A short, solid list is better than a run that never finishes.
+**Budget.** Stop researching at roughly 150 tool calls. A short, solid list is better than a run that never finishes, but use that budget across several sources before settling for a short list. If PitchBook is out, don't spend most of it retrying PitchBook.
 
 Gather ~30 candidates so some can fall out. Before writing any emails, run:
 ```
@@ -53,7 +57,7 @@ python -I scripts/dnc.py check --dnc <scratch>/dnc.json --candidates <scratch>/c
 ## 1c. Find an email for every person
 
 Jesse needs an address for all 20, so a guess is fine, but it has to be labeled honestly so Jesse knows which ones might bounce. Work down this list and stop at the first that works:
-1. **PitchBook** person profile email → `Verified (PitchBook)`.
+1. **PitchBook** person profile email, if PitchBook is available → `Verified (PitchBook)`. A single-person lookup in the top search box often still works when the screener is at its limit.
 2. Email published on the firm site, a press release, an SEC filing, or a conference page → `Verified (public source)`. Team pages often hide `mailto:` links and full bios in HTML attributes that page-text tools miss, so search the page source (see sources.md).
 3. **Firm pattern**: find any confirmed address for someone else at that firm (PitchBook, firm site, the tracker sheet's past emails, ADV contact) and apply its format (`first@`, `flast@`, `first.last@`, `firstl@`) → `Pattern-matched (based on x@firm.com)`.
 4. No confirmed address at the firm. If a public email-format page (LeadIQ, RocketReach, ContactOut, Prospeo) states the firm's format, use it → `Guessed (format per <site>)`. Otherwise use `first@domain` for firms under ~20 people and `first.last@domain` for larger ones → `Guessed`.

@@ -2,7 +2,9 @@
 
 These notes reflect what worked and what failed in real runs. Update them when you learn something new.
 
-## PitchBook (best for people + emails)
+## PitchBook (recommended starting point, not required)
+
+PitchBook is the richest single source when it's available, but it's one option among many. If it's signed out, at its monthly search limit, or turns up nobody new, go to "Finding people beyond PitchBook" below and keep going.
 
 Jesse has PitchBook through Vanderbilt (account `jesse.r.fagen@vanderbilt.edu`). Use it in Chrome (Claude in Chrome tools: load them in one ToolSearch call; see `anthropic-skills:chrome-browser`).
 
@@ -28,7 +30,24 @@ Jesse has PitchBook through Vanderbilt (account `jesse.r.fagen@vanderbilt.edu`).
 - **Emails**: person profiles often list a work email. The older tracker's "PE HF RE additions" tab shows earlier PitchBook-sourced emails and how they were recorded (profile URL as the source).
 - Read pages with `get_page_text` instead of screenshots where you can. It is faster and cheaper.
 
-## Finding Vanderbilt alumni without PitchBook
+## Finding people beyond PitchBook
+
+Use these whenever PitchBook can't fill the list. Rotate through several rather than leaning on one, because each stream tends to dry up after a few queries. Recent grads (2020–2026) leave a different trail than senior people: they show up on student-club alumni pages, athletics rosters, "joins as Analyst/Associate" announcements and LinkedIn, much more than in firm press or Mergr. Whatever stream finds a person, confirm the current role on the firm's own site and the class year from a source you can cite, exactly as in `find-people.md`.
+
+Streams to try (rough order of how promising they are for this class range):
+1. **LinkedIn via WebSearch** (`allowed_domains: ["linkedin.com"]`), varied by title, year, city and strategy. Details below.
+2. **Firm team-page crawls.** Start from a list of small firms (the AUM cache's qualifying rows, AUM13F search results, a state's list of registered advisers, Mergr or PE Hub firm lists for a city), fetch each team page, and grep for "Vanderbilt". Look at analyst and associate bios especially.
+3. **New-hire and promotion announcements.** WebSearch for things like `"joins" associate "Vanderbilt University" private equity 2024`, `"promoted to Associate" "Vanderbilt"`, and press-release sites (businesswire.com, prnewswire.com, globenewswire.com) with `allowed_domains`. Announcements often state the school and sometimes the year.
+4. **Vanderbilt student investment and finance clubs.** Alumni or "where are they now" pages for Commodore Capital Group, the Vanderbilt investment / venture / real estate / finance clubs, and similar groups often list placements by class year. Also the Vanderbilt Career Center's published first-destination or outcomes reports, which name employers by class.
+5. **Vanderbilt athletics rosters** (vucommodores.com/roster/...) settle a class year, and former athletes are common at small PE/HF firms. Search `site:vucommodores.com` names you already have, or search LinkedIn for `"Vanderbilt" "varsity" associate private equity`.
+6. **Vanderbilt news and class notes**: Vanderbilt Magazine class notes, the Vanderbilt Hustler, and Vanderbilt news stories about alumni in finance.
+7. **Mergr** via WebSearch (`allowed_domains: ["mergr.com"]`); better for mid-level and senior people, see the 2026-11-02 notes.
+8. **Other public profiles**: Crunchbase people pages, conference speaker and panelist lists, podcast guest pages, Substack/Medium posts by young investors, and university mentorship rosters (like the Pro Forma Futures roster below) that state school and year.
+9. **The older trackers' research tabs and the prospect pool's `check` rows**: often one missing fact (usually class year) is all that stands between a row and the list.
+
+If a new stream works, write it down in a dated note at the bottom of this file, with the query or URL that worked.
+
+### LinkedIn and team-page details
 
 What worked:
 - **WebSearch with `allowed_domains: ["linkedin.com"]`**. Unlike plain WebSearch, it returns real `linkedin.com/in/...` URLs, and the snippets read like "Experience: X · Education: Vanderbilt University · Location: New York". Query ideas:
@@ -112,3 +131,12 @@ The message list is virtualized, so scrolling one row at a time is slow. Instead
 - If that message appears, stop using the screener and move to public sources. Don't try to get around the limit.
 - The screener table has no name links, so profile URLs can't be scraped from it.
 - All NY/NJ/CT people in that 159-row search are at firms over $2.5B or already on the do-not-contact list. The rest of the list is exhausted too, apart from the pool's check rows, which only need a class year.
+
+## Notes from the 2026-11-10 run (screener still at its monthly limit)
+
+- PitchBook was signed in (the session restored itself after entering the email), but the People Screener limit from Nov 5 still applies until December, so no screener searches were run.
+- The top "Search PitchBook…" box still works for single people. A person profile shows Biography, Education, current position with a "Since" date, the email, and sometimes **Year of Birth**. Year of Birth is a fast way to rule people out (William DuCharme: 1992), but it is not a class-year source.
+- Vanderbilt athletics roster pages (vucommodores.com/roster/<name>/) list the class for each season, which settles a class year (Lydia Witty: freshman 2015-16, so class of 2019).
+- Pro Forma Futures mentor roster (gerbil-glockenspiel-nk2n.squarespace.com/team-roster, `?format=json` pages through all 175 bios) has bios that state school and year. Only Dylan Cook (AVALT, 2022) fit, and AVALT discloses no AUM.
+- Commodore Capital Group (vanderbiltccg.com/data/site.json) lists analyst classes since Fall 2023 by name only. Most are still students or bankers.
+- Public sources produced no new qualifying people this week, using mainly LinkedIn, Mergr and rosters. A fresh screener pass after the limit resets on Dec 1 is worth doing, but until then don't wait on it: work through more of the streams in "Finding people beyond PitchBook" (announcements, student-club alumni pages, team-page crawls of small firms) before settling for a short list.
