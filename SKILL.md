@@ -105,6 +105,6 @@ Tell Jesse, in this order:
 1. What's done: the doc link, how many people, and the Verified / Pattern-matched / Guessed split.
 2. What's scheduled, if stage 4 ran: count, delivery time in Eastern, how many guessed addresses went in, and anyone left as a draft or marked `unclear`.
 3. What's waiting on them: Outlook sign-in if scheduling couldn't run, the master sheet if it wasn't updated, or the log if Excel had it locked.
-4. Anything that blocked the run, such as PitchBook being signed out or fewer than 20 people.
+4. Which sources the people came from, and anything that limited the run, such as PitchBook being signed out or at its search limit, or fewer than 20 people (and which other sources you tried).
 
 Keep "scheduled" and "saved as a draft" separate, and only say scheduled if Outlook showed it. Close any Chrome tabs you opened.

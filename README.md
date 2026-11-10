@@ -56,6 +56,6 @@ The clone is the installed skill, so `git pull` updates it. Paths in `config.jso
 
 ## What it needs
 
-- **Claude in Chrome**, signed in to Vanderbilt Outlook, for scheduling. PitchBook runs there too.
+- **Claude in Chrome**, signed in to Vanderbilt Outlook, for scheduling. PitchBook runs there too, when available; it's recommended but optional, and the skill falls back to other sources without it.
 - **Google Drive connector** for the weekly doc and reading the Master Tracker.
 - **Google Sheets connector** to write to the Master Tracker. Without it, everything else works and the rows wait in the outbox.
